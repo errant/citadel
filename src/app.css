@@ -1,0 +1,74 @@
+:root {
+	--ink: #0c1218;
+	--ink-soft: #15202b;
+	--mist: #9eb0c0;
+	--fog: #d7e0e8;
+	--brass: #d4a84b;
+	--brass-deep: #b8892f;
+	--steel: #3d5a6c;
+	--discord: #5865f2;
+	--discord-hover: #4752c4;
+	--radius: 0.35rem;
+	--font-display: 'Syne', Georgia, serif;
+	--font-body: 'Figtree', 'Segoe UI', sans-serif;
+	color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	min-height: 100%;
+	font-family: var(--font-body);
+	color: var(--fog);
+	background:
+		radial-gradient(120% 80% at 10% -10%, rgba(61, 90, 108, 0.45), transparent 55%),
+		radial-gradient(90% 70% at 100% 0%, rgba(212, 168, 75, 0.14), transparent 45%),
+		linear-gradient(165deg, var(--ink) 0%, #101a24 48%, var(--ink-soft) 100%);
+	background-attachment: fixed;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+a:hover {
+	color: var(--brass);
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: 2px solid var(--brass);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
