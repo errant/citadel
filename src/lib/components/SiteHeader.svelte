@@ -1,8 +1,25 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { authClient } from '#lib/auth-client.js';
 
 	const session = $derived(page.data.session);
+
+	async function signInWithDiscord() {
+		await authClient.signIn.social({
+			provider: 'discord',
+			callbackURL: '/hall'
+		});
+	}
+
+	async function signOut() {
+		await authClient.signOut({
+			fetchOptions: {
+				onSuccess: () => {
+					window.location.href = '/';
+				}
+			}
+		});
+	}
 </script>
 
 <header class="site-header">
@@ -16,11 +33,9 @@
 				{/if}
 				<span class="name">{session.user.name ?? 'Alliance member'}</span>
 			</span>
-			<button type="button" class="ghost" onclick={() => signOut({ callbackUrl: '/' })}>
-				Sign out
-			</button>
+			<button type="button" class="ghost" onclick={signOut}>Sign out</button>
 		{:else}
-			<button type="button" class="discord" onclick={() => signIn('discord', { callbackUrl: '/hall' })}>
+			<button type="button" class="discord" onclick={signInWithDiscord}>
 				Continue with Discord
 			</button>
 		{/if}

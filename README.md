@@ -4,23 +4,27 @@ Community website and management shell for **Kingshot Kingdom** Alliance leads.
 
 Citadel is a **public, deployable package**: you run your own instance on your own [Vercel](https://vercel.com) account. It is **not** official Kingshot software, **not** a game-server admin panel, and it has **no official Kingshot API**.
 
-This repo is the MVP scaffold: SvelteKit UI + [Auth.js](https://authjs.dev) Discord login + an authenticated “hall” shell.
+This repo is the MVP scaffold: SvelteKit UI + [Better Auth](https://www.better-auth.com/) Discord login + an authenticated “hall” shell.
 
 ## Stack
 
-- [SvelteKit](https://svelte.dev/docs/kit) 2 + Svelte 5 (runes)
-- [Auth.js](https://authjs.dev) via `@auth/sveltekit` (Discord provider)
+- [SvelteKit](https://svelte.dev/docs/kit) 3 + Svelte 5 (runes)
+- [Better Auth](https://www.better-auth.com/) with Discord social provider
 - `@sveltejs/adapter-vercel`
 
-Kit 2 is intentional for this MVP: current `@auth/sveltekit` targets Kit 1–2 and is not yet compatible with Kit 3’s `$app/paths` API. Svelte 5 runes are still used throughout.
+### Auth storage (MVP)
+
+Better Auth is configured in **database-less (stateless) mode**: sessions and OAuth account data live in encrypted cookies. That keeps the package bootable on Vercel without requiring operators to provision Postgres/SQLite for the first deploy.
+
+When you need durable users, session revocation, or Alliance admin tooling, add a database (Neon Postgres or Turso/libSQL are natural fits) and point Better Auth at it.
 
 ## Local development
 
-Requires **Node.js ≥ 20**.
+Requires **Node.js ≥ 22.17**.
 
 ```sh
 cp .env.example .env
-# fill AUTH_SECRET, AUTH_DISCORD_ID, AUTH_DISCORD_SECRET
+# fill BETTER_AUTH_SECRET, DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
 npm install
 npm run dev
 ```
@@ -31,11 +35,11 @@ Open [http://localhost:5173](http://localhost:5173).
 
 1. Create an application at [Discord Developer Portal](https://discord.com/developers/applications).
 2. Under **OAuth2 → Redirects**, add:
-   - `http://localhost:5173/auth/callback/discord`
-   - `https://YOUR_PRODUCTION_DOMAIN/auth/callback/discord`
-3. Copy **Client ID** → `AUTH_DISCORD_ID` and **Client Secret** → `AUTH_DISCORD_SECRET`.
-4. Generate a session secret (≥32 chars) for `AUTH_SECRET`, e.g. `openssl rand -base64 32`.
-5. Set `AUTH_URL` to your site origin (`http://localhost:5173` locally).
+   - `http://localhost:5173/api/auth/callback/discord`
+   - `https://YOUR_PRODUCTION_DOMAIN/api/auth/callback/discord`
+3. Copy **Client ID** → `DISCORD_CLIENT_ID` and **Client Secret** → `DISCORD_CLIENT_SECRET`.
+4. Generate a secret (≥32 chars) for `BETTER_AUTH_SECRET`, e.g. `openssl rand -base64 32`.
+5. Set `BETTER_AUTH_URL` to your site origin (`http://localhost:5173` locally).
 
 Do not commit real credentials. Placeholders in `.env.example` stay empty.
 
@@ -43,11 +47,10 @@ Do not commit real credentials. Placeholders in `.env.example` stay empty.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `AUTH_SECRET` | Yes | Encrypts Auth.js sessions |
-| `AUTH_DISCORD_ID` | Yes | Discord OAuth client ID |
-| `AUTH_DISCORD_SECRET` | Yes | Discord OAuth client secret |
-| `AUTH_URL` | Prod recommended | Canonical site URL |
-| `AUTH_TRUST_HOST` | Optional | Trust host header when needed |
+| `BETTER_AUTH_SECRET` | Yes | Encrypts sessions / cookies (≥32 chars) |
+| `BETTER_AUTH_URL` | Yes | Canonical site URL for OAuth callbacks |
+| `DISCORD_CLIENT_ID` | Yes | Discord OAuth client ID |
+| `DISCORD_CLIENT_SECRET` | Yes | Discord OAuth client secret |
 
 ## Scripts
 
@@ -67,7 +70,7 @@ Until then:
 
 1. Import this repo into your Vercel project (SvelteKit / adapter-vercel).
 2. Set the env vars above in the Vercel dashboard.
-3. Add the production Discord redirect URL.
+3. Add the production Discord redirect URL (`/api/auth/callback/discord`).
 4. Deploy.
 
 ## Out of scope (for now)
@@ -75,3 +78,4 @@ Until then:
 - Setup CLI automation
 - Official Kingshot / publisher APIs
 - Heavy kingdom feature modules beyond the authenticated shell
+- Durable auth database (stateless cookies for MVP)

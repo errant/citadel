@@ -1,13 +1,17 @@
-import type { Session } from '@auth/core/types';
+import type { Session } from '#lib/auth.js';
 
 declare global {
 	namespace App {
 		interface Locals {
-			auth: () => Promise<Session | null>;
+			session: Session['session'] | null;
+			user: Session['user'] | null;
 		}
 
 		interface PageData {
-			session: Session | null;
+			session: {
+				user: Session['user'];
+				session: Session['session'];
+			} | null;
 		}
 	}
 }

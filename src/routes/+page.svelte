@@ -1,8 +1,15 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { signIn } from '@auth/sveltekit/client';
+	import { authClient } from '#lib/auth-client.js';
 
 	const session = $derived(page.data.session);
+
+	async function signInWithDiscord() {
+		await authClient.signIn.social({
+			provider: 'discord',
+			callbackURL: '/hall'
+		});
+	}
 </script>
 
 <svelte:head>
@@ -24,11 +31,7 @@
 			{#if session?.user}
 				<a class="primary" href="/hall">Enter the hall</a>
 			{:else}
-				<button
-					type="button"
-					class="primary"
-					onclick={() => signIn('discord', { callbackUrl: '/hall' })}
-				>
+				<button type="button" class="primary" onclick={signInWithDiscord}>
 					Continue with Discord
 				</button>
 			{/if}
