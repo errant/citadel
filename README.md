@@ -39,7 +39,7 @@ Open [http://localhost:5173](http://localhost:5173).
    - `https://YOUR_PRODUCTION_DOMAIN/api/auth/callback/discord`
 3. Copy **Client ID** → `DISCORD_CLIENT_ID` and **Client Secret** → `DISCORD_CLIENT_SECRET`.
 4. Generate a secret (≥32 chars) for `BETTER_AUTH_SECRET`, e.g. `openssl rand -base64 32`.
-5. Set `BETTER_AUTH_URL` to your site origin (`http://localhost:5173` locally).
+5. Set `BETTER_AUTH_URL` to your site origin (`http://localhost:5173` locally). Prefer opening the same host in the browser that you set here.
 
 Do not commit real credentials. Placeholders in `.env.example` stay empty.
 
